@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///Users/vansshbarara/Desktop/e/web%20dev/ntccMajorCloudVault/app/providers.tsx"],"sourcesContent":["\"use client\"\n\nimport { SessionProvider } from \"next-auth/react\";\n\nexport default function Providers({ children }: { children: React.ReactNode }) {\n  return <SessionProvider>{children}</SessionProvider>;\n}\n\n\n\n\n"],"names":[],"mappings":";;;;AAEA;AAFA;;;AAIe,SAAS,UAAU,KAA2C;QAA3C,EAAE,QAAQ,EAAiC,GAA3C;IAChC,qBAAO,6LAAC,iJAAA,CAAA,kBAAe;kBAAE;;;;;;AAC3B;KAFwB","debugId":null}}]
+}
