@@ -1,6 +1,6 @@
 module.exports = {
 
-"[project]/.next-internal/server/app/api/files/upload/complete/route/actions.js [app-rsc] (server actions loader, ecmascript)": ((__turbopack_context__) => {
+"[project]/.next-internal/server/app/api/files/route/actions.js [app-rsc] (server actions loader, ecmascript)": ((__turbopack_context__) => {
 
 var { m: module, e: exports } = __turbopack_context__;
 {
@@ -274,67 +274,26 @@ const FileSchema = new __TURBOPACK__imported__module__$5b$externals$5d2f$mongoos
 });
 const __TURBOPACK__default__export__ = __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$29$__["default"].models.File || __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$29$__["default"].model("File", FileSchema);
 }),
-"[project]/lib/models/FileVersion.ts [app-route] (ecmascript)": ((__turbopack_context__) => {
+"[project]/app/api/files/route.ts [app-route] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
 
 __turbopack_context__.s({
-    "default": ()=>__TURBOPACK__default__export__
-});
-var __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$29$__ = __turbopack_context__.i("[externals]/mongoose [external] (mongoose, cjs)");
-;
-const FileVersionSchema = new __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$29$__["Schema"]({
-    fileId: {
-        type: __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$29$__["Schema"].Types.ObjectId,
-        ref: "File",
-        required: true,
-        index: true
-    },
-    versionNumber: {
-        type: Number,
-        required: true
-    },
-    s3Key: {
-        type: String,
-        required: true
-    },
-    size: {
-        type: Number,
-        required: true
-    },
-    mimeType: {
-        type: String,
-        required: true
-    },
-    uploadedAt: {
-        type: Date,
-        default: Date.now
-    }
-});
-const __TURBOPACK__default__export__ = __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$29$__["models"].FileVersion || __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$29$__["default"].model("FileVersion", FileVersionSchema);
-}),
-"[project]/app/api/files/upload/complete/route.ts [app-route] (ecmascript)": ((__turbopack_context__) => {
-"use strict";
-
-__turbopack_context__.s({
-    "POST": ()=>POST
+    "GET": ()=>GET
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/auth.ts [app-route] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mongodb$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/mongodb.ts [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$29$__ = __turbopack_context__.i("[externals]/mongoose [external] (mongoose, cjs)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next-auth/index.js [app-route] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/server.js [app-route] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$models$2f$File$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/models/File.ts [app-route] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$models$2f$FileVersion$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/models/FileVersion.ts [app-route] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$29$__ = __turbopack_context__.i("[externals]/mongoose [external] (mongoose, cjs)");
 ;
 ;
 ;
 ;
 ;
 ;
-;
-async function POST(req) {
+async function GET() {
     await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mongodb$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["connectDB"])();
-    //session check
     const session = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getServerSession"])(__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["authOptions"]);
     if (!session?.user?.id) {
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
@@ -343,52 +302,22 @@ async function POST(req) {
             status: 401
         });
     }
-    const userId = session.user.id;
-    const { fileId, versionNumber, s3Key } = await req.json();
-    console.log('ok before req check 2');
-    if (!fileId || !versionNumber || !s3Key) {
-        return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
-            error: "Missing fields required"
-        }, {
-            status: 403
-        });
-    }
-    //check the owner 
-    const ownerObjectId = new __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$29$__["default"].Types.ObjectId(userId);
-    const file = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$models$2f$File$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].findOne({
-        _id: fileId,
-        ownerId: ownerObjectId
-    });
-    if (!file) {
-        return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
-            error: "Forbidden"
-        }, {
-            status: 403
-        });
-    }
-    //finalize the version by chaning the pending s3 key to real s3 key in metadata
-    const updated = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$models$2f$FileVersion$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].findOneAndUpdate({
-        fileId,
-        versionNumber,
-        s3Key: "PENDING"
-    }, {
-        $set: {
-            s3Key
-        }
-    });
-    if (!updated) {
-        return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
-            error: "No pending version found"
-        }, {
-            status: 400
-        });
-    }
-    return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
-        success: true
-    });
+    const ownerId = new __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$29$__["default"].Types.ObjectId(session.user.id);
+    const files = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$models$2f$File$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].find({
+        ownerId
+    }).sort({
+        updatedAt: -1
+    }).select("_id originalName latestVersion updatedAt").lean();
+    const result = files.map((f)=>({
+            fileId: f._id.toString(),
+            originalName: f.originalName,
+            latestVersion: f.latestVersion,
+            updatedAt: f.updatedAt
+        }));
+    return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json(result);
 }
 }),
 
 };
 
-//# sourceMappingURL=%5Broot-of-the-server%5D__90ff9e0a._.js.map
+//# sourceMappingURL=%5Broot-of-the-server%5D__16a97d78._.js.map

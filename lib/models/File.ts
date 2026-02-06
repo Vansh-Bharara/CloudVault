@@ -5,23 +5,25 @@ export interface IFile {
   ownerId: Schema.Types.ObjectId;
   originalName: string;
   latestVersion: number;
+  createdAt:Date,
+  updatedAt:Date
 }
 
 const FileSchema = new Schema<IFile>({
-  ownerId:{
-    type:Schema.Types.ObjectId,
-    required:true,
-    index:true,
+  ownerId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    index: true,
   },
-  originalName:{
-    type:String,
-    required:true,
+  originalName: {
+    type: String,
+    required: true,
   },
-  latestVersion:{
-    type:Number,
-    default:0,
+  latestVersion: {
+    type: Number,
+    default: 0,
   },
-}, {timestamps:true});
+}, { timestamps: true });
 
 // Prevent model overwrite on hot reload
 export default (mongoose.models.File as mongoose.Model<IFile>) ||
