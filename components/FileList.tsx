@@ -1,116 +1,339 @@
 "use client";
 
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 import { toast } from "sonner";
 
 type FileItem = {
-  id: string;
-  filename: string;
-  s3Key: string;
+  fileId: string;
+  originalName: string;
+  latestVersion: number;
+  mimeType: string; // from latest version
+  updatedAt: string;
+};
+
+type FileVersion = {
+  versionNumber: number;
   size: number;
   mimeType: string;
-  createdAt: string;
+  uploadedAt: string;
 };
 
 export default function FileList() {
   const [files, setFiles] = useState<FileItem[]>([]);
+  const [filteredFiles, setFilteredFiles] = useState<FileItem[]>([]);
+  const [versions, setVersions] = useState<FileVersion[]>([]);
+  const [expandedFileId, setExpandedFileId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState("");
 
   async function fetchFiles() {
     try {
       setLoading(true);
-      const endpoint = query ? `/api/files/search?q=${query}` : "/api/files/list"
-      const res = await fetch(endpoint)
-      if (!res.ok) throw new Error("Failed to fetch files")
-      const data = await res.json()
-      setFiles(data)
-    }
-    catch(err){
-      console.error(err)
-      setFiles([])
-    }
-    finally{
-      setLoading(false)
+      const res = await fetch("/api/files");
+      if (!res.ok) throw new Error("Failed to fetch files");
+      const data = await res.json();
+      setFiles(data);
+      setFilteredFiles(data);
+    } catch (err) {
+      console.error(err);
+      setFiles([]);
+      setFilteredFiles([]);
+    } finally {
+      setLoading(false);
     }
   }
 
-  const onQueryChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setQuery(e?.target?.value)
+  async function fetchVersions(fileId: string) {
+    const res = await fetch(`/api/files/${fileId}/versions`);
+    if (!res.ok) return;
+    const data = await res.json();
+    setVersions(data);
   }
 
   useEffect(() => {
+    fetchFiles();
+  }, []);
 
-    if(!query){
-      fetchFiles()
-      return;
+  // client-side search (simple & acceptable)
+  useEffect(() => {
+    if (!query) {
+      setFilteredFiles(files);
+    } else {
+      setFilteredFiles(
+        files.filter((f) =>
+          f.originalName.toLowerCase().includes(query.toLowerCase())
+        )
+      );
     }
-    const timeout = setTimeout(fetchFiles, 500)
+  }, [query, files]);
 
-    return () => {
-      clearTimeout(timeout)
-    }
-  }, [query]);
-
-  async function handleDownload(id: string) {
-    const res = await fetch(`/api/files/download/${id}`);
+  async function handleDownloadLatest(fileId: string) {
+    const res = await fetch(`/api/files/${fileId}/download/latest`);
     if (!res.ok) {
-      alert("Failed to get download URL");
+      toast.error("Failed to get download URL");
       return;
     }
     const { url } = await res.json();
-    // open in new tab (download)
     window.open(url, "_blank");
   }
 
-  async function handleDelete(id: string) {
-    if (!confirm("Delete this file?")) return;
-    const res = await fetch(`/api/files/delete/${id}`, { method: "DELETE" });
-    if (res.ok) {
-      setFiles(f => f.filter(x => x.id !== id));
-      toast("File deleted successfully !")
-    } else {
-      alert("Failed to delete");
-    }
+  if (loading) {
+    return (
+      <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 p-6 text-gray-600">
+        Loading files...
+      </div>
+    );
   }
 
-  if (loading) return (
-    <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 p-6 text-gray-600">
-      Loading files...
-    </div>
-  );
-
-  if (!files.length) return (
-    <>
-      <input type="text" placeholder="search" className="px-3 py-2 w-64 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 mb-2" onChange={onQueryChange} value={query} />
-      <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 p-6 text-gray-500">
-        No files yet.
-      </div>
-    </>
-  );
+  if (!filteredFiles.length) {
+    return (
+      <>
+        <input
+          type="text"
+          placeholder="search"
+          className="px-3 py-2 w-64 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 mb-2"
+          value={query}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setQuery(e.target.value)
+          }
+        />
+        <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 p-6 text-gray-500">
+          No files yet.
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 overflow-hidden mt-4 py-2 px-3">
-      <input type="text" placeholder="search" className="px-3 py-2 w-64 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 mb-2" onChange={onQueryChange} value={query} />
+      {/* Search bar */}
+      <input
+        type="text"
+        placeholder="search"
+        className="px-3 py-2 w-64 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 mb-2"
+        value={query}
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          setQuery(e.target.value)
+        }
+      />
+
       <div className="divide-y divide-gray-100">
-        {files.map((f) => (
-          <div key={f.id} className="grid grid-cols-12 items-center px-4 py-3 hover:bg-gray-50 transition">
-            <div className="col-span-6">
-              <div className="font-medium text-gray-800 truncate" title={f.filename}>{f.filename}</div>
-              <div className="text-xs text-gray-500">{new Date(f.createdAt).toLocaleString()}</div>
+        {filteredFiles.map((f) => (
+          <div key={f.fileId} className="px-4 py-3">
+            {/* FILE ROW */}
+            <div
+              className="grid grid-cols-12 items-center hover:bg-gray-50 transition cursor-pointer"
+              onClick={() => {
+                const next =
+                  expandedFileId === f.fileId ? null : f.fileId;
+                setExpandedFileId(next);
+                if (next) fetchVersions(f.fileId);
+              }}
+            >
+              <div className="col-span-4">
+                <div
+                  className="font-medium text-gray-800 truncate"
+                  title={f.originalName}
+                >
+                  {f.originalName}
+                </div>
+                <div className="text-xs text-gray-500">
+                  {new Date(f.updatedAt).toLocaleString()}
+                </div>
+              </div>
+
+              {/* File type */}
+              <div className="col-span-3 text-sm text-gray-500">
+                Latest v{f.latestVersion}
+              </div>
+
+              <div
+                className="col-span-3 text-sm text-gray-500 truncate"
+              >
+                Show verions
+              </div>
+
+              {/* Actions */}
+              <div className="col-span-2 flex items-center justify-end gap-2">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDownloadLatest(f.fileId);
+                  }}
+                  className="px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition"
+                >
+                  Download
+                </button>
+              </div>
             </div>
-            <div className="col-span-3 text-sm text-gray-500 truncate" title={f.mimeType}>{f.mimeType}</div>
-            <div className="col-span-3 flex items-center justify-end gap-2">
-              <button onClick={() => handleDownload(f.id)} className="px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition">
-                Download
-              </button>
-              <button onClick={() => handleDelete(f.id)} className="px-3 py-1.5 bg-red-500 text-white rounded-md text-sm hover:bg-red-600 transition">
-                Delete
-              </button>
-            </div>
+
+            {/* VERSION LIST */}
+            {expandedFileId === f.fileId && (
+              <div className="mt-2 ml-4 border-l pl-4 space-y-2">
+                {versions.map((v) => (
+                  <div
+                    key={v.versionNumber}
+                    className="flex justify-between text-sm text-gray-600"
+                  >
+                    {/* <p>File Type : {v.mimeType}</p> */}
+                    <span>Version {v.versionNumber}</span>
+                    <span>
+                      {new Date(v.uploadedAt).toLocaleString()}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </div>
     </div>
   );
 }
+
+// "use client";
+
+// import { useEffect, useState } from "react";
+
+// type FileItem = {
+//   fileId: string;
+//   originalName: string;
+//   latestVersion: number;
+//   updatedAt: string;
+// };
+
+// export default function FileList() {
+//   const [files, setFiles] = useState<FileItem[]>([]);
+//   const [loading, setLoading] = useState(false);
+
+//   // modal-related state
+//   const [modalFile, setModalFile] = useState<FileItem | null>(null);
+//   const [versions, setVersions] = useState<any[]>([]);
+
+//   async function fetchFiles() {
+//     try {
+//       setLoading(true);
+//       const res = await fetch("/api/files");
+//       if (!res.ok) throw new Error("Failed to fetch files");
+//       const data = await res.json();
+//       setFiles(data);
+//     } catch (err) {
+//       console.error(err);
+//       setFiles([]);
+//     } finally {
+//       setLoading(false);
+//     }
+//   }
+
+//   async function fetchVersions(fileId: string) {
+//     const res = await fetch(`/api/files/${fileId}/versions`);
+//     if (!res.ok) return;
+//     const data = await res.json();
+//     setVersions(data);
+//   }
+
+//   useEffect(() => {
+//     fetchFiles();
+//   }, []);
+
+//   // lock background scroll when modal is open
+//   useEffect(() => {
+//     document.body.style.overflow = modalFile ? "hidden" : "";
+//     return () => {
+//       document.body.style.overflow = "";
+//     };
+//   }, [modalFile]);
+
+//   if (loading) {
+//     return (
+//       <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 p-6 text-gray-600">
+//         Loading files...
+//       </div>
+//     );
+//   }
+
+//   if (!files.length) {
+//     return (
+//       <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 p-6 text-gray-500">
+//         No files yet.
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <>
+//       {/* FILE LIST */}
+//       <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 overflow-hidden mt-4 py-2 px-3">
+//         <div className="divide-y divide-gray-100">
+//           {files.map((f) => (
+//             <div key={f.fileId} className="px-4 py-3">
+//               <div
+//                 className="grid grid-cols-12 items-center hover:bg-gray-50 transition cursor-pointer"
+//                 onClick={async () => {
+//                   await fetchVersions(f.fileId);
+//                   setModalFile(f);
+//                 }}
+//               >
+//                 <div className="col-span-6">
+//                   <div className="font-medium text-gray-800 truncate">
+//                     {f.originalName}
+//                   </div>
+//                   <div className="text-xs text-gray-500">
+//                     Updated: {new Date(f.updatedAt).toLocaleString()}
+//                   </div>
+//                 </div>
+
+//                 <div className="col-span-3 text-sm text-gray-500">
+//                   Latest v{f.latestVersion}
+//                 </div>
+
+//                 <div className="col-span-3 text-right text-sm text-blue-600">
+//                   Show versions
+//                 </div>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+
+//       {/* MODAL */}
+//       {modalFile && (
+//         <div className="fixed inset-0 z-50 flex items-center justify-center">
+//           {/* Backdrop */}
+//           <div
+//             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+//             onClick={() => setModalFile(null)}
+//           />
+
+//           {/* Modal box */}
+//           <div className="relative z-10 w-full max-w-md rounded-2xl bg-white/90 backdrop-blur-xl shadow-xl border border-gray-200 p-6">
+//             <div className="flex items-center justify-between mb-4">
+//               <h2 className="text-lg font-semibold text-gray-800 truncate">
+//                 {modalFile.originalName}
+//               </h2>
+//               <button
+//                 onClick={() => setModalFile(null)}
+//                 className="text-gray-400 hover:text-gray-600"
+//               >
+//                 ✕
+//               </button>
+//             </div>
+
+//             <div className="space-y-3 max-h-80 overflow-y-auto">
+//               {versions.map((v) => (
+//                 <div
+//                   key={v.versionNumber}
+//                   className="flex justify-between text-sm text-gray-600"
+//                 >
+//                   <span>Version {v.versionNumber}</span>
+//                   <span>{new Date(v.uploadedAt).toLocaleString()}</span>
+//                 </div>
+//               ))}
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </>
+//   );
+// }
+

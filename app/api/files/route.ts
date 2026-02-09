@@ -25,7 +25,7 @@ export async function GET() {
         fileId: f._id.toString(),
         originalName: f.originalName,
         latestVersion: f.latestVersion,
-        updatedAt: f.updatedAt
+        updatedAt: f.updatedAt,
     }))
 
     return NextResponse.json(result)
