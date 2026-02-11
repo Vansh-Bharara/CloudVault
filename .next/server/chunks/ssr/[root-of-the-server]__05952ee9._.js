@@ -359,7 +359,135 @@ function FileList() {
         lineNumber: 108,
         columnNumber: 5
     }, this);
-}
+} // "use client";
+ // import { useEffect, useState } from "react";
+ // type FileItem = {
+ //   fileId: string;
+ //   originalName: string;
+ //   latestVersion: number;
+ //   updatedAt: string;
+ // };
+ // export default function FileList() {
+ //   const [files, setFiles] = useState<FileItem[]>([]);
+ //   const [loading, setLoading] = useState(false);
+ //   // modal-related state
+ //   const [modalFile, setModalFile] = useState<FileItem | null>(null);
+ //   const [versions, setVersions] = useState<any[]>([]);
+ //   async function fetchFiles() {
+ //     try {
+ //       setLoading(true);
+ //       const res = await fetch("/api/files");
+ //       if (!res.ok) throw new Error("Failed to fetch files");
+ //       const data = await res.json();
+ //       setFiles(data);
+ //     } catch (err) {
+ //       console.error(err);
+ //       setFiles([]);
+ //     } finally {
+ //       setLoading(false);
+ //     }
+ //   }
+ //   async function fetchVersions(fileId: string) {
+ //     const res = await fetch(`/api/files/${fileId}/versions`);
+ //     if (!res.ok) return;
+ //     const data = await res.json();
+ //     setVersions(data);
+ //   }
+ //   useEffect(() => {
+ //     fetchFiles();
+ //   }, []);
+ //   // lock background scroll when modal is open
+ //   useEffect(() => {
+ //     document.body.style.overflow = modalFile ? "hidden" : "";
+ //     return () => {
+ //       document.body.style.overflow = "";
+ //     };
+ //   }, [modalFile]);
+ //   if (loading) {
+ //     return (
+ //       <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 p-6 text-gray-600">
+ //         Loading files...
+ //       </div>
+ //     );
+ //   }
+ //   if (!files.length) {
+ //     return (
+ //       <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 p-6 text-gray-500">
+ //         No files yet.
+ //       </div>
+ //     );
+ //   }
+ //   return (
+ //     <>
+ //       {/* FILE LIST */}
+ //       <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 overflow-hidden mt-4 py-2 px-3">
+ //         <div className="divide-y divide-gray-100">
+ //           {files.map((f) => (
+ //             <div key={f.fileId} className="px-4 py-3">
+ //               <div
+ //                 className="grid grid-cols-12 items-center hover:bg-gray-50 transition cursor-pointer"
+ //                 onClick={async () => {
+ //                   await fetchVersions(f.fileId);
+ //                   setModalFile(f);
+ //                 }}
+ //               >
+ //                 <div className="col-span-6">
+ //                   <div className="font-medium text-gray-800 truncate">
+ //                     {f.originalName}
+ //                   </div>
+ //                   <div className="text-xs text-gray-500">
+ //                     Updated: {new Date(f.updatedAt).toLocaleString()}
+ //                   </div>
+ //                 </div>
+ //                 <div className="col-span-3 text-sm text-gray-500">
+ //                   Latest v{f.latestVersion}
+ //                 </div>
+ //                 <div className="col-span-3 text-right text-sm text-blue-600">
+ //                   Show versions
+ //                 </div>
+ //               </div>
+ //             </div>
+ //           ))}
+ //         </div>
+ //       </div>
+ //       {/* MODAL */}
+ //       {modalFile && (
+ //         <div className="fixed inset-0 z-50 flex items-center justify-center">
+ //           {/* Backdrop */}
+ //           <div
+ //             className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+ //             onClick={() => setModalFile(null)}
+ //           />
+ //           {/* Modal box */}
+ //           <div className="relative z-10 w-full max-w-md rounded-2xl bg-white/90 backdrop-blur-xl shadow-xl border border-gray-200 p-6">
+ //             <div className="flex items-center justify-between mb-4">
+ //               <h2 className="text-lg font-semibold text-gray-800 truncate">
+ //                 {modalFile.originalName}
+ //               </h2>
+ //               <button
+ //                 onClick={() => setModalFile(null)}
+ //                 className="text-gray-400 hover:text-gray-600"
+ //               >
+ //                 ✕
+ //               </button>
+ //             </div>
+ //             <div className="space-y-3 max-h-80 overflow-y-auto">
+ //               {versions.map((v) => (
+ //                 <div
+ //                   key={v.versionNumber}
+ //                   className="flex justify-between text-sm text-gray-600"
+ //                 >
+ //                   <span>Version {v.versionNumber}</span>
+ //                   <span>{new Date(v.uploadedAt).toLocaleString()}</span>
+ //                 </div>
+ //               ))}
+ //             </div>
+ //           </div>
+ //         </div>
+ //       )}
+ //     </>
+ //   );
+ // }
 }),
 
 };
