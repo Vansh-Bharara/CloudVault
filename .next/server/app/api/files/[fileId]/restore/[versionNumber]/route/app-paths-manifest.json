@@ -1,0 +1,3 @@
+{
+  "/api/files/[fileId]/restore/[versionNumber]/route": "app/api/files/[fileId]/restore/[versionNumber]/route.js"
+}

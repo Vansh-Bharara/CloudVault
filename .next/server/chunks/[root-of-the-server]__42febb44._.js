@@ -1,6 +1,6 @@
 module.exports = {
 
-"[project]/.next-internal/server/app/api/files/[fileId]/download/[versionNumber]/route/actions.js [app-rsc] (server actions loader, ecmascript)": ((__turbopack_context__) => {
+"[project]/.next-internal/server/app/api/files/[fileId]/restore/[versionNumber]/route/actions.js [app-rsc] (server actions loader, ecmascript)": ((__turbopack_context__) => {
 
 var { m: module, e: exports } = __turbopack_context__;
 {
@@ -224,148 +224,6 @@ async function connectDB() {
     return cached.conn;
 }
 }),
-"[externals]/@aws-sdk/client-s3 [external] (@aws-sdk/client-s3, cjs)": ((__turbopack_context__) => {
-
-var { m: module, e: exports } = __turbopack_context__;
-{
-const mod = __turbopack_context__.x("@aws-sdk/client-s3", () => require("@aws-sdk/client-s3"));
-
-module.exports = mod;
-}}),
-"[externals]/os [external] (os, cjs)": ((__turbopack_context__) => {
-
-var { m: module, e: exports } = __turbopack_context__;
-{
-const mod = __turbopack_context__.x("os", () => require("os"));
-
-module.exports = mod;
-}}),
-"[externals]/path [external] (path, cjs)": ((__turbopack_context__) => {
-
-var { m: module, e: exports } = __turbopack_context__;
-{
-const mod = __turbopack_context__.x("path", () => require("path"));
-
-module.exports = mod;
-}}),
-"[externals]/crypto [external] (crypto, cjs)": ((__turbopack_context__) => {
-
-var { m: module, e: exports } = __turbopack_context__;
-{
-const mod = __turbopack_context__.x("crypto", () => require("crypto"));
-
-module.exports = mod;
-}}),
-"[externals]/fs [external] (fs, cjs)": ((__turbopack_context__) => {
-
-var { m: module, e: exports } = __turbopack_context__;
-{
-const mod = __turbopack_context__.x("fs", () => require("fs"));
-
-module.exports = mod;
-}}),
-"[externals]/buffer [external] (buffer, cjs)": ((__turbopack_context__) => {
-
-var { m: module, e: exports } = __turbopack_context__;
-{
-const mod = __turbopack_context__.x("buffer", () => require("buffer"));
-
-module.exports = mod;
-}}),
-"[externals]/stream [external] (stream, cjs)": ((__turbopack_context__) => {
-
-var { m: module, e: exports } = __turbopack_context__;
-{
-const mod = __turbopack_context__.x("stream", () => require("stream"));
-
-module.exports = mod;
-}}),
-"[externals]/node:stream [external] (node:stream, cjs)": ((__turbopack_context__) => {
-
-var { m: module, e: exports } = __turbopack_context__;
-{
-const mod = __turbopack_context__.x("node:stream", () => require("node:stream"));
-
-module.exports = mod;
-}}),
-"[externals]/http [external] (http, cjs)": ((__turbopack_context__) => {
-
-var { m: module, e: exports } = __turbopack_context__;
-{
-const mod = __turbopack_context__.x("http", () => require("http"));
-
-module.exports = mod;
-}}),
-"[externals]/https [external] (https, cjs)": ((__turbopack_context__) => {
-
-var { m: module, e: exports } = __turbopack_context__;
-{
-const mod = __turbopack_context__.x("https", () => require("https"));
-
-module.exports = mod;
-}}),
-"[externals]/http2 [external] (http2, cjs)": ((__turbopack_context__) => {
-
-var { m: module, e: exports } = __turbopack_context__;
-{
-const mod = __turbopack_context__.x("http2", () => require("http2"));
-
-module.exports = mod;
-}}),
-"[project]/lib/s3.ts [app-route] (ecmascript)": ((__turbopack_context__) => {
-"use strict";
-
-__turbopack_context__.s({
-    "deleteS3Object": ()=>deleteS3Object,
-    "getPresignedDownloadUrl": ()=>getPresignedDownloadUrl,
-    "getPresignedUploadUrl": ()=>getPresignedUploadUrl
-});
-var __TURBOPACK__imported__module__$5b$externals$5d2f40$aws$2d$sdk$2f$client$2d$s3__$5b$external$5d$__$2840$aws$2d$sdk$2f$client$2d$s3$2c$__cjs$29$__ = __turbopack_context__.i("[externals]/@aws-sdk/client-s3 [external] (@aws-sdk/client-s3, cjs)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$aws$2d$sdk$2f$s3$2d$request$2d$presigner$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$module__evaluation$3e$__ = __turbopack_context__.i("[project]/node_modules/@aws-sdk/s3-request-presigner/dist-es/index.js [app-route] (ecmascript) <module evaluation>");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$aws$2d$sdk$2f$s3$2d$request$2d$presigner$2f$dist$2d$es$2f$getSignedUrl$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@aws-sdk/s3-request-presigner/dist-es/getSignedUrl.js [app-route] (ecmascript)");
-;
-;
-const region = process.env.AWS_REGION;
-const bucket = process.env.S3_BUCKET_NAME;
-if (!region || !bucket) {
-    throw new Error("Please set up AWS_REGION and S3_BUCKET_NAME in .nv.local");
-}
-const s3 = new __TURBOPACK__imported__module__$5b$externals$5d2f40$aws$2d$sdk$2f$client$2d$s3__$5b$external$5d$__$2840$aws$2d$sdk$2f$client$2d$s3$2c$__cjs$29$__["S3Client"]({
-    region,
-    credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-    }
-});
-async function getPresignedUploadUrl(key, contentType, expiresIn = 900) {
-    const command = new __TURBOPACK__imported__module__$5b$externals$5d2f40$aws$2d$sdk$2f$client$2d$s3__$5b$external$5d$__$2840$aws$2d$sdk$2f$client$2d$s3$2c$__cjs$29$__["PutObjectCommand"]({
-        Bucket: bucket,
-        Key: key,
-        ContentType: contentType
-    });
-    const url = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$aws$2d$sdk$2f$s3$2d$request$2d$presigner$2f$dist$2d$es$2f$getSignedUrl$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getSignedUrl"])(s3, command, {
-        expiresIn
-    });
-    return url;
-}
-async function getPresignedDownloadUrl(key, expiresIn = 900) {
-    const command = new __TURBOPACK__imported__module__$5b$externals$5d2f40$aws$2d$sdk$2f$client$2d$s3__$5b$external$5d$__$2840$aws$2d$sdk$2f$client$2d$s3$2c$__cjs$29$__["GetObjectCommand"]({
-        Bucket: bucket,
-        Key: key
-    });
-    const url = await await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$aws$2d$sdk$2f$s3$2d$request$2d$presigner$2f$dist$2d$es$2f$getSignedUrl$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getSignedUrl"])(s3, command, {
-        expiresIn
-    });
-    return url;
-}
-async function deleteS3Object(key) {
-    const command = new __TURBOPACK__imported__module__$5b$externals$5d2f40$aws$2d$sdk$2f$client$2d$s3__$5b$external$5d$__$2840$aws$2d$sdk$2f$client$2d$s3$2c$__cjs$29$__["DeleteObjectCommand"]({
-        Bucket: bucket,
-        Key: key
-    });
-    return s3.send(command);
-}
-}),
 "[externals]/util [external] (util, cjs)": ((__turbopack_context__) => {
 
 var { m: module, e: exports } = __turbopack_context__;
@@ -379,6 +237,22 @@ module.exports = mod;
 var { m: module, e: exports } = __turbopack_context__;
 {
 const mod = __turbopack_context__.x("url", () => require("url"));
+
+module.exports = mod;
+}}),
+"[externals]/http [external] (http, cjs)": ((__turbopack_context__) => {
+
+var { m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("http", () => require("http"));
+
+module.exports = mod;
+}}),
+"[externals]/crypto [external] (crypto, cjs)": ((__turbopack_context__) => {
+
+var { m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("crypto", () => require("crypto"));
 
 module.exports = mod;
 }}),
@@ -398,11 +272,27 @@ const mod = __turbopack_context__.x("querystring", () => require("querystring"))
 
 module.exports = mod;
 }}),
+"[externals]/buffer [external] (buffer, cjs)": ((__turbopack_context__) => {
+
+var { m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("buffer", () => require("buffer"));
+
+module.exports = mod;
+}}),
 "[externals]/zlib [external] (zlib, cjs)": ((__turbopack_context__) => {
 
 var { m: module, e: exports } = __turbopack_context__;
 {
 const mod = __turbopack_context__.x("zlib", () => require("zlib"));
+
+module.exports = mod;
+}}),
+"[externals]/https [external] (https, cjs)": ((__turbopack_context__) => {
+
+var { m: module, e: exports } = __turbopack_context__;
+{
+const mod = __turbopack_context__.x("https", () => require("https"));
 
 module.exports = mod;
 }}),
@@ -422,17 +312,16 @@ const mod = __turbopack_context__.x("next/dist/server/app-render/after-task-asyn
 
 module.exports = mod;
 }}),
-"[project]/app/api/files/[fileId]/download/[versionNumber]/route.ts [app-route] (ecmascript)": ((__turbopack_context__) => {
+"[project]/app/api/files/[fileId]/restore/[versionNumber]/route.ts [app-route] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
 
 __turbopack_context__.s({
-    "GET": ()=>GET
+    "POST": ()=>POST
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/auth.ts [app-route] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$models$2f$File$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/models/File.ts [app-route] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$models$2f$FileVersion$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/models/FileVersion.ts [app-route] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mongodb$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/mongodb.ts [app-route] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$s3$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/s3.ts [app-route] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$29$__ = __turbopack_context__.i("[externals]/mongoose [external] (mongoose, cjs)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next-auth/index.js [app-route] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/server.js [app-route] (ecmascript)");
@@ -443,9 +332,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$serv
 ;
 ;
 ;
-;
-async function GET(req, { params }) {
-    const { fileId, versionNumber } = await params;
+async function POST(req, { params }) {
+    const { fileId } = await params;
+    const { versionNumber } = await params;
     await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$mongodb$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["connectDB"])();
     //authenticate
     const session = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2d$auth$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getServerSession"])(__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["authOptions"]);
@@ -456,40 +345,39 @@ async function GET(req, { params }) {
             status: 401
         });
     }
-    const ownerIdObject = new __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$29$__["default"].Types.ObjectId(session.user.id);
-    // const fileIdObject = new mongoose.Types.ObjectId(fileId);
-    const versionNumberParam = Number(versionNumber);
-    //check the ownership
+    const ownerId = new __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$29$__["default"].Types.ObjectId(session.user.id);
+    const fileIdObject = new __TURBOPACK__imported__module__$5b$externals$5d2f$mongoose__$5b$external$5d$__$28$mongoose$2c$__cjs$29$__["default"].Types.ObjectId(fileId);
+    const versionNumberNum = Number(versionNumber);
+    //check ownership
     const file = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$models$2f$File$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].findOne({
         _id: fileId,
-        ownerId: ownerIdObject
+        ownerId
     });
-    if (!file) {
-        return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
-            error: "Forbidden"
-        }, {
-            status: 403
-        });
-    }
+    //check if version exists
     const version = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$models$2f$FileVersion$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].findOne({
-        fileId,
-        versionNumber: versionNumberParam
+        fileId: fileIdObject,
+        versionNumber: versionNumberNum
     });
     if (!version || version.s3Key === "PENDING") {
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
-            error: "Version not available"
+            error: "Invalid version"
         }, {
             status: 400
         });
     }
-    //generate url 
-    const url = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$s3$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getPresignedDownloadUrl"])(version.s3Key);
+    await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$models$2f$File$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].updateOne({
+        _id: fileId
+    }, {
+        $set: {
+            latestVersion: versionNumberNum
+        }
+    });
     return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
-        url
+        success: true
     });
 }
 }),
 
 };
 
-//# sourceMappingURL=%5Broot-of-the-server%5D__99cb3129._.js.map
+//# sourceMappingURL=%5Broot-of-the-server%5D__42febb44._.js.map

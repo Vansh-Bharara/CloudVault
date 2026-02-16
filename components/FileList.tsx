@@ -160,7 +160,7 @@ export default function FileList() {
                     e.stopPropagation();
                     handleDownloadLatest(f.fileId);
                   }}
-                  className="px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition"
+                  className="px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition cursor-pointer"
                 >
                   Download
                 </button>
@@ -173,17 +173,55 @@ export default function FileList() {
                 {versions.map((v) => (
                   <div
                     key={v.versionNumber}
-                    className="flex justify-between text-sm text-gray-600"
+                    className="flex justify-between items-center text-sm text-gray-600"
                   >
-                    {/* <p>File Type : {v.mimeType}</p> */}
-                    <span>Version {v.versionNumber}</span>
-                    <span>
-                      {new Date(v.uploadedAt).toLocaleString()}
-                    </span>
+                    <div>
+                      <div>Version {v.versionNumber}</div>
+                      <div className="text-xs text-gray-400">
+                        {new Date(v.uploadedAt).toLocaleString()}
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        fetch(`/api/files/${f.fileId}/download/${v.versionNumber}`)
+                          .then(res => res.json())
+                          .then(data => {
+                            if (data.url) window.open(data.url, "_blank");
+                          });
+                      }}
+                      className="px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600 transition cursor-pointer"
+                    >
+                      Download
+                    </button>
+                    
+                    {v.versionNumber!==f.latestVersion && (
+                      <button 
+                    onClick={async (e)=>{
+                      e.stopPropagation();
+                      const res = await fetch(`/api/files/${f.fileId}/restore/${v.versionNumber}`,
+                        {method:'POST'}
+                      )
+                      if(res.ok){
+                        toast("Versions restored successfully");
+                        await fetchFiles() //refresh file list
+                        await fetchVersions(f.fileId); //refresh versions
+                      }
+                      else{
+                        toast.error("Restore failed")
+                      }
+                    }}
+                    className="px-2 py-1 bg-yellow-500 text-white rounded text-xs hover:bg-yellow-600 transition">
+                      Restore
+                    </button>
+                    )}
+
                   </div>
                 ))}
               </div>
             )}
+
           </div>
         ))}
       </div>

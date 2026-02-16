@@ -27,7 +27,7 @@ export async function GET(
 
     const ownerIdObject = new mongoose.Types.ObjectId(session.user.id);
     // const fileIdObject = new mongoose.Types.ObjectId(fileId);
-    const versionNumberParam = Number(params.versionNumber);
+    const versionNumberParam = Number(versionNumber);
 
     //check the ownership
     const file = await File.findOne({

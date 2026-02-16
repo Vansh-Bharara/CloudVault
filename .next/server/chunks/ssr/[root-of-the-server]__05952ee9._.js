@@ -291,7 +291,7 @@ function FileList() {
                                                 e.stopPropagation();
                                                 handleDownloadLatest(f.fileId);
                                             },
-                                            className: "px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition",
+                                            className: "px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition cursor-pointer",
                                             children: "Download"
                                         }, void 0, false, {
                                             fileName: "[project]/components/FileList.tsx",
@@ -312,24 +312,68 @@ function FileList() {
                             expandedFileId === f.fileId && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "mt-2 ml-4 border-l pl-4 space-y-2",
                                 children: versions.map((v)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex justify-between text-sm text-gray-600",
+                                        className: "flex justify-between items-center text-sm text-gray-600",
                                         children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 children: [
-                                                    "Version ",
-                                                    v.versionNumber
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        children: [
+                                                            "Version ",
+                                                            v.versionNumber
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/FileList.tsx",
+                                                        lineNumber: 179,
+                                                        columnNumber: 23
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "text-xs text-gray-400",
+                                                        children: new Date(v.uploadedAt).toLocaleString()
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/FileList.tsx",
+                                                        lineNumber: 180,
+                                                        columnNumber: 23
+                                                    }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/FileList.tsx",
-                                                lineNumber: 179,
+                                                lineNumber: 178,
                                                 columnNumber: 21
                                             }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                children: new Date(v.uploadedAt).toLocaleString()
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: (e)=>{
+                                                    e.stopPropagation();
+                                                    fetch(`/api/files/${f.fileId}/download/${v.versionNumber}`).then((res)=>res.json()).then((data)=>{
+                                                        if (data.url) window.open(data.url, "_blank");
+                                                    });
+                                                },
+                                                className: "px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600 transition cursor-pointer",
+                                                children: "Download"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/FileList.tsx",
-                                                lineNumber: 180,
+                                                lineNumber: 185,
                                                 columnNumber: 21
+                                            }, this),
+                                            v.versionNumber !== f.latestVersion && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: async (e)=>{
+                                                    e.stopPropagation();
+                                                    const res = await fetch(`/api/files/${f.fileId}/restore/${v.versionNumber}`, {
+                                                        method: 'POST'
+                                                    });
+                                                    if (res.ok) {
+                                                        (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"])("Versions restored successfully");
+                                                        await fetchFiles(); //refresh file list
+                                                        await fetchVersions(f.fileId); //refresh versions
+                                                    } else {
+                                                        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].error("Restore failed");
+                                                    }
+                                                },
+                                                className: "px-2 py-1 bg-yellow-500 text-white rounded text-xs hover:bg-yellow-600 transition",
+                                                children: "Restore"
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/FileList.tsx",
+                                                lineNumber: 200,
+                                                columnNumber: 23
                                             }, this)
                                         ]
                                     }, v.versionNumber, true, {

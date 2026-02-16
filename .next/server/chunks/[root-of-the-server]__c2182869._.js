@@ -480,8 +480,15 @@ async function POST(req) {
         });
         fileId = newFile._id.toString();
     } else {
-        versionNumber = existingFile.latestVersion + 1;
+        // versionNumber = existingFile.latestVersion + 1;
+        // fileId = existingFile._id.toString()
         fileId = existingFile._id.toString();
+        const maxVersionDoc = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$models$2f$FileVersion$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].findOne({
+            fileId
+        }).sort({
+            versionNumber: -1
+        }).select("versionNumber");
+        versionNumber = maxVersionDoc ? maxVersionDoc.versionNumber + 1 : 1;
         await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$models$2f$File$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].updateOne({
             _id: fileId
         }, {

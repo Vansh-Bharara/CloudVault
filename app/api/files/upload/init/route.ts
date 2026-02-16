@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 import File from "@/lib/models/File";
 import FileVersion from "@/lib/models/FileVersion";
 import { getPresignedUploadUrl } from "@/lib/s3";
+import { MaximizeIcon } from "lucide-react";
 
 
 
@@ -53,8 +54,14 @@ export async function POST(req:Request){
         fileId = newFile._id.toString()
     }
     else{
-        versionNumber = existingFile.latestVersion + 1;
-        fileId = existingFile._id.toString()
+        // versionNumber = existingFile.latestVersion + 1;
+        // fileId = existingFile._id.toString()
+        fileId = existingFile._id.toString();
+        const maxVersionDoc = await FileVersion.findOne({fileId})
+                                                .sort({versionNumber:-1})
+                                                .select("versionNumber")
+
+        versionNumber = maxVersionDoc?maxVersionDoc.versionNumber+1:1;
         await File.updateOne(
             {_id:fileId},
             {$set:{latestVersion:versionNumber}}
