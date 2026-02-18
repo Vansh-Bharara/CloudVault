@@ -273,7 +273,7 @@ function FileList() {
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "col-span-3 text-sm text-gray-500 truncate",
-                                        children: "Show verions"
+                                        children: "Show versions"
                                     }, void 0, false, {
                                         fileName: "[project]/components/FileList.tsx",
                                         lineNumber: 150,
@@ -281,19 +281,42 @@ function FileList() {
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "col-span-2 flex items-center justify-end gap-2",
-                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                            onClick: (e)=>{
-                                                e.stopPropagation();
-                                                handleDownloadLatest(f.fileId);
-                                            },
-                                            className: "px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition cursor-pointer",
-                                            children: "Download"
-                                        }, void 0, false, {
-                                            fileName: "[project]/components/FileList.tsx",
-                                            lineNumber: 158,
-                                            columnNumber: 17
-                                        }, this)
-                                    }, void 0, false, {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: (e)=>{
+                                                    e.stopPropagation();
+                                                    handleDownloadLatest(f.fileId);
+                                                },
+                                                className: "px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition cursor-pointer",
+                                                children: "Download"
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/FileList.tsx",
+                                                lineNumber: 158,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: async (e)=>{
+                                                    e.stopPropagation();
+                                                    if (!confirm("Delete this file and all versions permanently?")) return;
+                                                    const res = await fetch("/api/files/".concat(f.fileId), {
+                                                        method: "DELETE"
+                                                    });
+                                                    if (res.ok) {
+                                                        (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"])("File deleted");
+                                                        await fetchFiles();
+                                                    } else {
+                                                        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].error("Delete failed");
+                                                    }
+                                                },
+                                                className: "text-red-600 hover:text-red-800 text-lg cursor-pointer",
+                                                children: "🗑"
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/FileList.tsx",
+                                                lineNumber: 169,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
                                         fileName: "[project]/components/FileList.tsx",
                                         lineNumber: 157,
                                         columnNumber: 15
@@ -318,7 +341,7 @@ function FileList() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/FileList.tsx",
-                                                        lineNumber: 179,
+                                                        lineNumber: 200,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -326,13 +349,13 @@ function FileList() {
                                                         children: new Date(v.uploadedAt).toLocaleString()
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/FileList.tsx",
-                                                        lineNumber: 180,
+                                                        lineNumber: 201,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/FileList.tsx",
-                                                lineNumber: 178,
+                                                lineNumber: 199,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -346,7 +369,7 @@ function FileList() {
                                                 children: "Download"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/FileList.tsx",
-                                                lineNumber: 185,
+                                                lineNumber: 206,
                                                 columnNumber: 21
                                             }, this),
                                             v.versionNumber !== f.latestVersion && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -367,18 +390,40 @@ function FileList() {
                                                 children: "Restore"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/FileList.tsx",
-                                                lineNumber: 200,
+                                                lineNumber: 221,
                                                 columnNumber: 23
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: async (e)=>{
+                                                    e.stopPropagation();
+                                                    if (!confirm("Delete this version permanently ?")) return;
+                                                    const res = await fetch("api/files/".concat(f.fileId, "/version/").concat(v.versionNumber), {
+                                                        method: "DELETE"
+                                                    });
+                                                    if (res.ok) {
+                                                        (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"])("Version deleted");
+                                                        await fetchFiles();
+                                                        await fetchVersions(f.fileId);
+                                                    } else {
+                                                        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"].error("Delete failed");
+                                                    }
+                                                },
+                                                className: "text-red-500 hover:text-red-700 text-lg cursor-pointer",
+                                                children: "🗑"
+                                            }, void 0, false, {
+                                                fileName: "[project]/components/FileList.tsx",
+                                                lineNumber: 242,
+                                                columnNumber: 21
                                             }, this)
                                         ]
                                     }, v.versionNumber, true, {
                                         fileName: "[project]/components/FileList.tsx",
-                                        lineNumber: 174,
+                                        lineNumber: 195,
                                         columnNumber: 19
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/components/FileList.tsx",
-                                lineNumber: 172,
+                                lineNumber: 193,
                                 columnNumber: 15
                             }, this)
                         ]

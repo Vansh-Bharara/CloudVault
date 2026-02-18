@@ -150,7 +150,7 @@ export default function FileList() {
               <div
                 className="col-span-3 text-sm text-gray-500 truncate"
               >
-                Show verions
+                Show versions
               </div>
 
               {/* Actions */}
@@ -164,6 +164,27 @@ export default function FileList() {
                 >
                   Download
                 </button>
+
+                {/*Delete file*/}
+                <button
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    if (!confirm("Delete this file and all versions permanently?")) return;
+                    const res = await fetch(`/api/files/${f.fileId}`, {
+                      method: "DELETE",
+                    });
+                    if (res.ok) {
+                      toast("File deleted");
+                      await fetchFiles();
+                    } else {
+                      toast.error("Delete failed");
+                    }
+                  }}
+                  className="text-red-600 hover:text-red-800 text-lg cursor-pointer"
+                >
+                  🗑
+                </button>
+
               </div>
             </div>
 
@@ -195,27 +216,48 @@ export default function FileList() {
                     >
                       Download
                     </button>
-                    
-                    {v.versionNumber!==f.latestVersion && (
-                      <button 
-                    onClick={async (e)=>{
-                      e.stopPropagation();
-                      const res = await fetch(`/api/files/${f.fileId}/restore/${v.versionNumber}`,
-                        {method:'POST'}
-                      )
-                      if(res.ok){
-                        toast("Versions restored successfully");
-                        await fetchFiles() //refresh file list
-                        await fetchVersions(f.fileId); //refresh versions
-                      }
-                      else{
-                        toast.error("Restore failed")
-                      }
-                    }}
-                    className="px-2 py-1 bg-yellow-500 text-white rounded text-xs hover:bg-yellow-600 transition">
-                      Restore
-                    </button>
+
+                    {v.versionNumber !== f.latestVersion && (
+                      <button
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          const res = await fetch(`/api/files/${f.fileId}/restore/${v.versionNumber}`,
+                            { method: 'POST' }
+                          )
+                          if (res.ok) {
+                            toast("Versions restored successfully");
+                            await fetchFiles() //refresh file list
+                            await fetchVersions(f.fileId); //refresh versions
+                          }
+                          else {
+                            toast.error("Restore failed")
+                          }
+                        }}
+                        className="px-2 py-1 bg-yellow-500 text-white rounded text-xs hover:bg-yellow-600 transition">
+                        Restore
+                      </button>
                     )}
+
+                    {/*delete button*/}
+                    <button
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        if (!confirm("Delete this version permanently ?")) return;
+                        const res = await fetch(`api/files/${f.fileId}/version/${v.versionNumber}`,
+                          { method: "DELETE" }
+                        )
+                        if (res.ok) {
+                          toast("Version deleted");
+                          await fetchFiles();
+                          await fetchVersions(f.fileId);
+                        }
+                        else {
+                          toast.error("Delete failed");
+                        }
+                      }}
+                      className="text-red-500 hover:text-red-700 text-lg cursor-pointer">
+                      🗑
+                    </button>
 
                   </div>
                 ))}
