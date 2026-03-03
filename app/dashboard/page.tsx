@@ -5,6 +5,7 @@ import Link from "next/link";
 import { authOptions } from "../../lib/auth";
 import Navbar from "@/components/Navbar";
 import FileList from "@/components/FileList";
+import StoragePolicySettings from "@/components/StoragePolicySettings";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
@@ -26,7 +27,12 @@ export default async function DashboardPage() {
             >
               ← Go Back
             </a>
-          </div>
+          </div>  
+          <Link
+            href="/settings"
+          >
+            <button>Settings</button>
+          </Link>
         </div>
       </header>
 

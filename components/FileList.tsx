@@ -194,71 +194,78 @@ export default function FileList() {
                 {versions.map((v) => (
                   <div
                     key={v.versionNumber}
-                    className="flex justify-between items-center text-sm text-gray-600"
+                    className="grid grid-cols-12 items-center text-sm text-gray-600"
                   >
-                    <div>
+                    <div className="col-span-6">
                       <div>Version {v.versionNumber}</div>
                       <div className="text-xs text-gray-400">
                         {new Date(v.uploadedAt).toLocaleString()}
                       </div>
                     </div>
 
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        fetch(`/api/files/${f.fileId}/download/${v.versionNumber}`)
-                          .then(res => res.json())
-                          .then(data => {
-                            if (data.url) window.open(data.url, "_blank");
-                          });
-                      }}
-                      className="px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600 transition cursor-pointer"
-                    >
-                      Download
-                    </button>
+                    <div className="col-span-6 flex justify-end items-center gap-2">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          fetch(`/api/files/${f.fileId}/download/${v.versionNumber}`)
+                            .then(res => res.json())
+                            .then(data => {
+                              if (data.url) window.open(data.url, "_blank");
+                            });
+                        }}
+                        className="px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600 transition cursor-pointer"
+                      >
+                        Download
+                      </button>
 
-                    {v.versionNumber !== f.latestVersion && (
+                      <button
+                        disabled={v.versionNumber === f.latestVersion}
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          if (v.versionNumber === f.latestVersion) return;
+
+                          const res = await fetch(
+                            `/api/files/${f.fileId}/restore/${v.versionNumber}`,
+                            { method: "POST" }
+                          );
+
+                          if (res.ok) {
+                            toast("Version restored successfully");
+                            await fetchFiles();
+                            await fetchVersions(f.fileId);
+                          } else {
+                            toast.error("Restore failed");
+                          }
+                        }}
+                        className={`px-2 py-1 text-xs rounded transition ${v.versionNumber === f.latestVersion
+                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                            : "bg-yellow-500 text-white hover:bg-yellow-600"
+                          }`}
+                      >
+                        Restore
+                      </button>
+
+                      {/*delete button*/}
                       <button
                         onClick={async (e) => {
                           e.stopPropagation();
-                          const res = await fetch(`/api/files/${f.fileId}/restore/${v.versionNumber}`,
-                            { method: 'POST' }
+                          if (!confirm("Delete this version permanently ?")) return;
+                          const res = await fetch(`api/files/${f.fileId}/version/${v.versionNumber}`,
+                            { method: "DELETE" }
                           )
                           if (res.ok) {
-                            toast("Versions restored successfully");
-                            await fetchFiles() //refresh file list
-                            await fetchVersions(f.fileId); //refresh versions
+                            toast("Version deleted");
+                            await fetchFiles();
+                            await fetchVersions(f.fileId);
                           }
                           else {
-                            toast.error("Restore failed")
+                            toast.error("Delete failed");
                           }
                         }}
-                        className="px-2 py-1 bg-yellow-500 text-white rounded text-xs hover:bg-yellow-600 transition">
-                        Restore
+                        className="text-red-500 hover:text-red-700 text-lg cursor-pointer">
+                        🗑
                       </button>
-                    )}
-
-                    {/*delete button*/}
-                    <button
-                      onClick={async (e) => {
-                        e.stopPropagation();
-                        if (!confirm("Delete this version permanently ?")) return;
-                        const res = await fetch(`api/files/${f.fileId}/version/${v.versionNumber}`,
-                          { method: "DELETE" }
-                        )
-                        if (res.ok) {
-                          toast("Version deleted");
-                          await fetchFiles();
-                          await fetchVersions(f.fileId);
-                        }
-                        else {
-                          toast.error("Delete failed");
-                        }
-                      }}
-                      className="text-red-500 hover:text-red-700 text-lg cursor-pointer">
-                      🗑
-                    </button>
-
+                    </div>
                   </div>
                 ))}
               </div>
