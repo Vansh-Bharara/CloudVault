@@ -441,24 +441,35 @@ async function updateUserLifecycleRule({ userId, enabled, archiveAfterDays, dele
     const filteredRules = existingRules.filter((rule)=>rule.ID !== ruleId);
     //if enabled add new rule 
     if (enabled) {
-        filteredRules.push({
+        const rule = {
             ID: ruleId,
             Filter: {
                 Prefix: prefix
             },
-            Status: "Enabled",
-            Transitions: [
+            Status: "Enabled"
+        };
+        if (storageClass === "INTELLIGENT_TIERING") {
+            rule.Transitions = [];
+        } else {
+            rule.Transitions = [
                 {
                     Days: archiveAfterDays,
                     StorageClass: storageClass
                 }
-            ],
-            Expiration: {
+            ];
+            rule.Expiration = {
                 Days: deleteAfterDays
-            }
-        });
+            };
+        }
+        filteredRules.push(rule);
     }
     //[ush updated configuration
+    if (filteredRules.length === 0) {
+        await s3.send(new __TURBOPACK__imported__module__$5b$externals$5d2f40$aws$2d$sdk$2f$client$2d$s3__$5b$external$5d$__$2840$aws$2d$sdk$2f$client$2d$s3$2c$__cjs$29$__["DeleteBucketLifecycleCommand"]({
+            Bucket: bucket
+        }));
+        return;
+    }
     await s3.send(new __TURBOPACK__imported__module__$5b$externals$5d2f40$aws$2d$sdk$2f$client$2d$s3__$5b$external$5d$__$2840$aws$2d$sdk$2f$client$2d$s3$2c$__cjs$29$__["PutBucketLifecycleConfigurationCommand"]({
         Bucket: bucket,
         LifecycleConfiguration: {

@@ -318,7 +318,8 @@ module.exports = mod;
 __turbopack_context__.s({
     "deleteS3Object": ()=>deleteS3Object,
     "getPresignedDownloadUrl": ()=>getPresignedDownloadUrl,
-    "getPresignedUploadUrl": ()=>getPresignedUploadUrl
+    "getPresignedUploadUrl": ()=>getPresignedUploadUrl,
+    "updateUserLifecycleRule": ()=>updateUserLifecycleRule
 });
 var __TURBOPACK__imported__module__$5b$externals$5d2f40$aws$2d$sdk$2f$client$2d$s3__$5b$external$5d$__$2840$aws$2d$sdk$2f$client$2d$s3$2c$__cjs$29$__ = __turbopack_context__.i("[externals]/@aws-sdk/client-s3 [external] (@aws-sdk/client-s3, cjs)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$aws$2d$sdk$2f$s3$2d$request$2d$presigner$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$module__evaluation$3e$__ = __turbopack_context__.i("[project]/node_modules/@aws-sdk/s3-request-presigner/dist-es/index.js [app-route] (ecmascript) <module evaluation>");
@@ -328,7 +329,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$aws$2d$sdk
 const region = process.env.AWS_REGION;
 const bucket = process.env.S3_BUCKET_NAME;
 if (!region || !bucket) {
-    throw new Error("Please set up AWS_REGION and S3_BUCKET_NAME in .nv.local");
+    throw new Error("Please set up AWS_REGION and S3_BUCKET_NAME in .env.local");
 }
 const s3 = new __TURBOPACK__imported__module__$5b$externals$5d2f40$aws$2d$sdk$2f$client$2d$s3__$5b$external$5d$__$2840$aws$2d$sdk$2f$client$2d$s3$2c$__cjs$29$__["S3Client"]({
     region,
@@ -364,6 +365,61 @@ async function deleteS3Object(key) {
         Key: key
     });
     return s3.send(command);
+}
+async function updateUserLifecycleRule({ userId, enabled, archiveAfterDays, deleteAfterDays, storageClass }) {
+    const prefix = `uploads/${userId}`;
+    const ruleId = `user-${userId}-lifecycle`;
+    //get existing lifecycle config
+    let existingRules = [];
+    try {
+        const current = await s3.send(new __TURBOPACK__imported__module__$5b$externals$5d2f40$aws$2d$sdk$2f$client$2d$s3__$5b$external$5d$__$2840$aws$2d$sdk$2f$client$2d$s3$2c$__cjs$29$__["GetBucketLifecycleConfigurationCommand"]({
+            Bucket: bucket
+        }));
+        existingRules = current.Rules || [];
+    } catch (err) {
+        if (err.name !== "NoSuchLifecycleConfiguration") {
+            throw err;
+        }
+    }
+    //remove existing rules for this user
+    const filteredRules = existingRules.filter((rule)=>rule.ID !== ruleId);
+    //if enabled add new rule 
+    if (enabled) {
+        const rule = {
+            ID: ruleId,
+            Filter: {
+                Prefix: prefix
+            },
+            Status: "Enabled"
+        };
+        if (storageClass === "INTELLIGENT_TIERING") {
+            rule.Transitions = [];
+        } else {
+            rule.Transitions = [
+                {
+                    Days: archiveAfterDays,
+                    StorageClass: storageClass
+                }
+            ];
+            rule.Expiration = {
+                Days: deleteAfterDays
+            };
+        }
+        filteredRules.push(rule);
+    }
+    //[ush updated configuration
+    if (filteredRules.length === 0) {
+        await s3.send(new __TURBOPACK__imported__module__$5b$externals$5d2f40$aws$2d$sdk$2f$client$2d$s3__$5b$external$5d$__$2840$aws$2d$sdk$2f$client$2d$s3$2c$__cjs$29$__["DeleteBucketLifecycleCommand"]({
+            Bucket: bucket
+        }));
+        return;
+    }
+    await s3.send(new __TURBOPACK__imported__module__$5b$externals$5d2f40$aws$2d$sdk$2f$client$2d$s3__$5b$external$5d$__$2840$aws$2d$sdk$2f$client$2d$s3$2c$__cjs$29$__["PutBucketLifecycleConfigurationCommand"]({
+        Bucket: bucket,
+        LifecycleConfiguration: {
+            Rules: filteredRules
+        }
+    }));
 }
 }),
 "[externals]/util [external] (util, cjs)": ((__turbopack_context__) => {

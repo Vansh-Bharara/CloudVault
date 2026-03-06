@@ -519,56 +519,52 @@ function DragDropZone() {
             //gt the presigned url 
             setUploading(true);
             setProgress(0);
-            const presignRes = await fetch("/api/files/presign", {
+            const initRes = await fetch("/api/files/upload/init", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    filename: file.name,
-                    contentType: file.type
+                    originalFileName: file.name,
+                    size: file.size,
+                    mimeType: file.type
                 })
             });
-            if (!presignRes.ok) {
-                throw new Error("Failed to get presign URL");
-            }
-            const { url, key } = await presignRes.json();
-            // now upload using XHR
+            if (!initRes.ok) throw new Error("upload init failed");
+            const { uploadUrl, s3Key, fileId, versionNumber } = await initRes.json();
+            // 2) upload to S3 using XHR to track progress
             await new Promise((resolve, reject)=>{
                 const xhr = new XMLHttpRequest();
-                xhr.open("PUT", url);
+                xhr.open("PUT", uploadUrl);
                 xhr.setRequestHeader("Content-Type", file.type);
                 xhr.upload.onprogress = (ev)=>{
                     if (ev.lengthComputable) {
                         setProgress(Math.round(ev.loaded / ev.total * 100));
                     }
                 };
-                //now upload file metadata on mongodb
                 xhr.onload = async ()=>{
                     if (xhr.status >= 200 && xhr.status < 300) {
-                        const metaRes = await fetch("api/files/metadata", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({
-                                filename: file.name,
-                                s3Key: key,
-                                size: file.size,
-                                mimeType: file.type
-                            })
-                        });
-                        if (!metaRes.ok) {
-                            throw new Error("Failed to record metadata");
-                        }
                         resolve();
                     } else {
-                        reject(new Error("upload failed"));
+                        reject(new Error(" s3 Upload failed"));
                     }
                 };
-                xhr.onerror = ()=>reject(new Error("Upload Error"));
+                xhr.onerror = ()=>reject(new Error("s3 Upload error"));
                 xhr.send(file);
             });
+            //confirm the upload 
+            const completeRes = await fetch('api/files/upload/complete', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    fileId,
+                    versionNumber,
+                    s3Key
+                })
+            });
+            if (!completeRes.ok) throw new Error("Upload finalize failed");
             setProgress(100);
             setUploaded(true);
             (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toast"])("File uploaded successfully !");
@@ -611,7 +607,7 @@ function DragDropZone() {
         onDrop,
         onDropRejected,
         maxFiles: 5,
-        maxSize: 1024 * 1024 * 50,
+        maxSize: 1024 * 1024 * 10,
         accept: {
             "image/*": [],
             "application/pdf": []
@@ -629,14 +625,14 @@ function DragDropZone() {
                             ...getInputProps()
                         }, void 0, false, {
                             fileName: "[project]/components/DragDropZone.tsx",
-                            lineNumber: 126,
+                            lineNumber: 124,
                             columnNumber: 9
                         }, this),
                         isDragActive ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                             children: "Drop the files here ..."
                         }, void 0, false, {
                             fileName: "[project]/components/DragDropZone.tsx",
-                            lineNumber: 129,
+                            lineNumber: 127,
                             columnNumber: 13
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "flex flex-col items-center justify-center h-full w-full",
@@ -645,31 +641,31 @@ function DragDropZone() {
                                     children: "Drag 'n' drop some files here, or click to select files"
                                 }, void 0, false, {
                                     fileName: "[project]/components/DragDropZone.tsx",
-                                    lineNumber: 132,
+                                    lineNumber: 130,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                     children: "Select Files"
                                 }, void 0, false, {
                                     fileName: "[project]/components/DragDropZone.tsx",
-                                    lineNumber: 133,
+                                    lineNumber: 131,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/DragDropZone.tsx",
-                            lineNumber: 131,
+                            lineNumber: 129,
                             columnNumber: 15
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/DragDropZone.tsx",
-                    lineNumber: 125,
+                    lineNumber: 123,
                     columnNumber: 7
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/DragDropZone.tsx",
-                lineNumber: 121,
+                lineNumber: 119,
                 columnNumber: 5
             }, this),
             uploading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -681,12 +677,12 @@ function DragDropZone() {
                     }
                 }, void 0, false, {
                     fileName: "[project]/components/DragDropZone.tsx",
-                    lineNumber: 141,
+                    lineNumber: 139,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/DragDropZone.tsx",
-                lineNumber: 140,
+                lineNumber: 138,
                 columnNumber: 7
             }, this),
             uploaded && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -696,12 +692,12 @@ function DragDropZone() {
                     children: "✅ File uploaded successfully!"
                 }, void 0, false, {
                     fileName: "[project]/components/DragDropZone.tsx",
-                    lineNumber: 149,
+                    lineNumber: 147,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/DragDropZone.tsx",
-                lineNumber: 148,
+                lineNumber: 146,
                 columnNumber: 7
             }, this)
         ]

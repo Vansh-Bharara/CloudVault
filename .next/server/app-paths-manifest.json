@@ -1,9 +1,13 @@
 {
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/api/files/[fileId]/download/latest/route": "app/api/files/[fileId]/download/latest/route.js",
+  "/api/files/[fileId]/route": "app/api/files/[fileId]/route.js",
   "/api/files/route": "app/api/files/route.js",
+  "/api/files/upload/complete/route": "app/api/files/upload/complete/route.js",
+  "/api/files/upload/init/route": "app/api/files/upload/init/route.js",
   "/api/storage/policy/route": "app/api/storage/policy/route.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/page": "app/page.js",
-  "/settings/page": "app/settings/page.js"
+  "/settings/page": "app/settings/page.js",
+  "/upload/page": "app/upload/page.js"
 }

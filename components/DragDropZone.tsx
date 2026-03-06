@@ -17,58 +17,56 @@ export default function DragDropZone() {
       //gt the presigned url 
       setUploading(true)
       setProgress(0)
-      const presignRes = await fetch("/api/files/presign", {
+      const initRes = await fetch("/api/files/upload/init", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ filename: file.name, contentType: file.type })
-      })
-      if (!presignRes.ok) {
-        throw new Error("Failed to get presign URL")
-      }
-      const { url, key } = await presignRes.json()
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ originalFileName: file.name, size:file.size, mimeType:file.type}),
+      });
+      if (!initRes.ok) throw new Error("upload init failed");
+      const {uploadUrl, s3Key, fileId, versionNumber} = await
+      initRes.json()
 
-      // now upload using XHR
+       // 2) upload to S3 using XHR to track progress
       await new Promise<void>((resolve, reject) => {
-        const xhr = new XMLHttpRequest()
-        xhr.open("PUT", url)
-        xhr.setRequestHeader("Content-Type", file.type)
+        const xhr = new XMLHttpRequest();
+        xhr.open("PUT", uploadUrl);
+
+        xhr.setRequestHeader("Content-Type", file.type);
 
         xhr.upload.onprogress = (ev) => {
           if (ev.lengthComputable) {
-            setProgress(Math.round((ev.loaded / ev.total) * 100))
+            setProgress(Math.round((ev.loaded / ev.total) * 100));
           }
-        }
+        };
 
-        //now upload file metadata on mongodb
         xhr.onload = async () => {
           if (xhr.status >= 200 && xhr.status < 300) {
-            const metaRes = await fetch("api/files/metadata", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                filename: file.name,
-                s3Key: key,
-                size: file.size,
-                mimeType: file.type
-              })
-            })
-            if (!metaRes.ok) {
-              throw new Error("Failed to record metadata")
-            }
             resolve()
           }
           else {
-            reject(new Error("upload failed"))
+            reject(new Error(" s3 Upload failed"));
           }
-        }
-        xhr.onerror = () => reject(new Error("Upload Error"))
-        xhr.send(file)
+        };
 
+        xhr.onerror = () => reject(new Error("s3 Upload error"));
+        xhr.send(file);
+      });
+
+       //confirm the upload 
+      const completeRes = await fetch('api/files/upload/complete',{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          fileId,
+          versionNumber,
+          s3Key
+        })
       })
-      setProgress(100)
-      setUploaded(true)
+
+      if(!completeRes.ok) throw new Error("Upload finalize failed")
+
+      setProgress(100);
+      setUploaded(true);
       toast("File uploaded successfully !")
     }
     catch (err: any) {
@@ -109,7 +107,7 @@ export default function DragDropZone() {
     onDrop,
     onDropRejected,
     maxFiles: 5,
-    maxSize: 1024 * 1024 * 50,
+    maxSize: 1024 * 1024 * 10,
     accept: {
       "image/*": [],
       "application/pdf": []
